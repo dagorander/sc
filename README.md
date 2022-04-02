@@ -1,0 +1,2 @@
+# sc
+A simple calculrator
