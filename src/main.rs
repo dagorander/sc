@@ -6,6 +6,10 @@ use std::env;
 use std::process;
 use std::io::Write; // Needed to force Print buffer in spite of no newline?
 
+
+// TODO: Create a data file for strings
+
+
 fn main() {
     welcome();
     main_screen();
