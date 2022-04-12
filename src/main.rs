@@ -6,18 +6,25 @@ use std::env;
 use std::process;
 use std::io::Write; // Needed to force Print buffer in spite of no newline?
 
-
 // TODO: Create a data file for strings
-
+//       That will mkake so many things so much cleaner
 
 fn main() {
-    welcome();
-    main_screen();
+    welcome_screen();
+
+    // Rudimentary decision loop
+    loop {
+        let choice: &str = info_screen();
+        // Also probably want a case/switch here...
+        if choice == "quit" { break }
+        if choice == "hamster" { println!("Hamsters are qute.") }
+        if choice == "continue" { continue }
+    }
 
     process::exit(0);
 }
 
-fn welcome() {
+fn welcome_screen() {
     clear_screen();
     println!("\n\nSIMPLE CALCULATOR\n\n");
     println!("A totally not shit calculator by Turnip McTurnipface.");
@@ -29,23 +36,30 @@ fn welcome() {
     }
 }
 
+// TODO: Figure out what the fuck the 'static is all about.
+fn info_screen() -> &'static str {
+    println!("#\n# This is the info screen\n#");
+    println!("Type q to exit, etc etc");
+    let standard_user_input: &str = ">>> ";
+    let selection: String = same_line_input(standard_user_input.to_string());
+    // This is where I should learn rust case/switch/etc. And see if there is
+    // a way to implement "or" operators on if statements?
+    if selection == "q" { return "quit" };
+    if selection == "quit" { return "quit" };
+    if selection == "h" { return "hamster" };
+    return "continue";    
+}
+
 fn main_screen() {
     let default_input: &str = "This is where you enter text: ";
     let purpose: String = same_line_input(default_input.to_string());
     println!("You entered: {}", purpose);
 
-    let test_thingie: &str = "This string tests
-        multiline input
-        to figure out if that works.
-        
-        It automatically includes newlines. :(";
-    println!("{}", test_thingie);
-
 }
 
 fn same_line_input(text: String) -> String {
     print!("{}", text);
-    std::io::stdout().flush(); // Flush buffer without newline, but why complaining?
+    std::io::stdout().flush().unwrap(); // Why need unwrap to silence warning?
     let input: String = text_io::read!("{}\n");
     return input;
 }
