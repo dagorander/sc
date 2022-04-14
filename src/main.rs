@@ -6,6 +6,11 @@ use std::env;
 use std::process;
 use std::io::Write; // Needed to force Print buffer in spite of no newline?
 
+// Possible tools and crates:
+// https://crates.io/crates/mexprp - math eval from string, but data types weird
+// Also https://crates.io/crates/meval
+
+
 // TODO: Create a data file for strings
 //       That will mkake so many things so much cleaner
 
@@ -19,6 +24,8 @@ fn main() {
         if choice == "quit" { break }
         if choice == "hamster" { println!("Hamsters are qute.") }
         if choice == "continue" { continue }
+        if choice == "math" { math_parser() }
+        if choice == "clear" { clear_screen() }
     }
 
     process::exit(0);
@@ -36,10 +43,23 @@ fn welcome_screen() {
     }
 }
 
+fn math_parser() {
+    loop {
+        let prompt: &str = "> ";
+        let input: String = same_line_input(prompt.to_string());
+        // Need "or" operands for this below too
+        if input == "q" { break }
+
+
+        let r = meval::eval_str(&input).unwrap();
+        println!("{} = {}", &input, r);
+    }
+}
+
 // TODO: Figure out what the fuck the 'static is all about.
 fn info_screen() -> &'static str {
     println!("#\n# This is the info screen\n#");
-    println!("Type q to exit, etc etc");
+    println!("Type q to exit, or m to do math");
     let standard_user_input: &str = ">>> ";
     let selection: String = same_line_input(standard_user_input.to_string());
     // This is where I should learn rust case/switch/etc. And see if there is
@@ -47,14 +67,10 @@ fn info_screen() -> &'static str {
     if selection == "q" { return "quit" };
     if selection == "quit" { return "quit" };
     if selection == "h" { return "hamster" };
+    if selection == "math" { return "math" };
+    if selection == "m" { return "math" };
+    if selection == "c" { return "clear" };
     return "continue";    
-}
-
-fn main_screen() {
-    let default_input: &str = "This is where you enter text: ";
-    let purpose: String = same_line_input(default_input.to_string());
-    println!("You entered: {}", purpose);
-
 }
 
 fn same_line_input(text: String) -> String {
