@@ -12,28 +12,67 @@ use std::io::Write; // Needed to force Print buffer in spite of no newline?
 
 
 // TODO: Create a data file for strings
-//       That will mkake so many things so much cleaner
+//       That will mkake so many things so much cleaner.
+
+// FEATURE WISHLISH:
+// Be able to store results into Memories for later display (or use?)
+// Remember previous value and access it through arrow-up
+// Support implied multiplication: 10/2(1+1)=10
+// Support returning values and exiting directly if used with params
+// --- probably with a flag to force integers?
 
 fn main() {
-    welcome_screen();
-
-    // Rudimentary decision loop
+    // TODO: check arguments and do something else if they exist
+    // Start the main loop
     loop {
-        let choice: &str = info_screen();
-        // Also probably want a case/switch here...
-        if choice == "quit" { break }
-        if choice == "hamster" { println!("Hamsters are qute.") }
-        if choice == "continue" { continue }
-        if choice == "math" { math_parser() }
-        if choice == "clear" { clear_screen() }
+        // Take input
+        let input: String = take_input();
+
+        // Check input, exit loop if "quit", etc
+        // Some switch/match/case instead of this soup?
+        if input == "quit" || input == "exit" { 
+            break
+        };
+        if input == "clear" { 
+            clear_screen();
+            continue
+        };
+        if input == "help" { 
+            help_screen();
+            continue 
+        };
+        if input == "info" { 
+            info_screen();
+            continue
+        };
+
+        // We now assume the input was mathematical and pass it for solving
+        // TODO: create some form of error handling for this, eprintln! for err
+        let r = meval::eval_str(&input).unwrap();
+        println!("> {} = {}", input, r);        
     }
 
     process::exit(0);
 }
 
-fn welcome_screen() {
-    clear_screen();
-    println!("\n\nSIMPLE CALCULATOR\n\n");
+// Still have to figure out why there's that 'static bs here...
+fn take_input() -> String {
+    let standard_user_input: &str = "";
+    let input: String = same_line_input(standard_user_input.to_string());
+    // This is where I should learn rust case/switch/etc. And see if there is
+    // a way to implement "or" operators on if statements?
+    // TODO: Can omit this if included in the main control flow through adding
+    // stuff like if input == "hamster" || input == "h" {..}
+    if input == "q" { return "quit".to_string() };
+    if input == "c" { return "clear".to_string() };
+    if input == "h" { return "help".to_string() };
+    if input == "i" { return "info".to_string() };
+
+    return input;
+}
+
+fn help_screen() {
+    println!("\nSIMPLE CALCULATOR");
     println!("A totally not shit calculator by Turnip McTurnipface.");
 
     let args: Vec<String> = env::args().collect();
@@ -43,34 +82,12 @@ fn welcome_screen() {
     }
 }
 
-fn math_parser() {
-    loop {
-        let prompt: &str = "> ";
-        let input: String = same_line_input(prompt.to_string());
-        // Need "or" operands for this below too
-        if input == "q" { break }
-
-
-        let r = meval::eval_str(&input).unwrap();
-        println!("{} = {}", &input, r);
-    }
-}
-
-// TODO: Figure out what the fuck the 'static is all about.
-fn info_screen() -> &'static str {
-    println!("#\n# This is the info screen\n#");
-    println!("Type q to exit, or m to do math");
-    let standard_user_input: &str = ">>> ";
-    let selection: String = same_line_input(standard_user_input.to_string());
-    // This is where I should learn rust case/switch/etc. And see if there is
-    // a way to implement "or" operators on if statements?
-    if selection == "q" { return "quit" };
-    if selection == "quit" { return "quit" };
-    if selection == "h" { return "hamster" };
-    if selection == "math" { return "math" };
-    if selection == "m" { return "math" };
-    if selection == "c" { return "clear" };
-    return "continue";    
+// TODO: Figure out what the heck the 'static is all about.
+// fn info_screen() -> &'static str { return "continue" }
+// etc etc etc. For now, avoiding that through all the Strings... :P
+fn info_screen() {
+    println!("\nSIMPLE CALCULATOR");
+    println!("the boring legal stuff? Or delete this info screen?")  
 }
 
 fn same_line_input(text: String) -> String {
