@@ -29,31 +29,20 @@ fn main() {
         let input: String = take_input();
 
         // Check input, exit loop if "quit", etc
-        // Some switch/match/case instead of this soup?
-        if input == "quit" || input == "exit" { 
-            break
-        };
-        if input == "clear" { 
-            clear_screen();
-            continue
-        };
-        if input == "help" { 
-            help_screen();
-            continue 
-        };
-        if input == "info" { 
-            info_screen();
-            continue
-        };
-
-        // We now assume the input was mathematical and pass it for solving
-        // with a little check to not crash if input was invalid.
-        match meval::eval_str(&input) {
-            Ok(r) => {
-                println!("> {} = {}", input, r.to_string());
-            }
-            Err(_e) => {
-                eprintln!("ERR: unable to resolve expression")
+        match input.as_str() {
+            "quit" | "q" | "exit" | "e" => { break },
+            "c" | "clear" => { clear_screen(); continue },
+            "h" | "help" => { help_screen(); continue },
+            "i" | "info" => { info_screen(); continue },
+            // We now assume the input was mathematical and pass it for solving
+            // with a little check to not crash if input was invalid.
+            _ => match meval::eval_str(&input) {
+                Ok(r) => {
+                    println!("> {} = {}", input, r.to_string());
+                }
+                Err(_e) => {
+                    eprintln!("ERR: unable to resolve expression")
+                }
             }
         };
 
@@ -66,15 +55,6 @@ fn main() {
 fn take_input() -> String {
     let standard_user_input: &str = "";
     let input: String = same_line_input(standard_user_input.to_string());
-    // This is where I should learn rust case/switch/etc. And see if there is
-    // a way to implement "or" operators on if statements?
-    // TODO: Can omit this if included in the main control flow through adding
-    // stuff like if input == "hamster" || input == "h" {..}
-    if input == "q" { return "quit".to_string() };
-    if input == "c" { return "clear".to_string() };
-    if input == "h" { return "help".to_string() };
-    if input == "i" { return "info".to_string() };
-
     return input;
 }
 
