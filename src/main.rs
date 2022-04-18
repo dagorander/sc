@@ -13,6 +13,7 @@ use std::io::Write; // Needed to force Print buffer in spite of no newline?
 
 // TODO: Create a data file for strings
 //       That will mkake so many things so much cleaner.
+// Make info and help screens not different
 
 // FEATURE WISHLISH:
 // Be able to store results into Memories for later display (or use?)
@@ -20,6 +21,7 @@ use std::io::Write; // Needed to force Print buffer in spite of no newline?
 // Support implied multiplication: 10/2(1+1)=10
 // Support returning values and exiting directly if used with params
 // --- probably with a flag to force integers?
+// Give correct error codes on bad exits
 
 fn main() {
     // TODO: check arguments and do something else if they exist
