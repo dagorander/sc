@@ -47,9 +47,16 @@ fn main() {
         };
 
         // We now assume the input was mathematical and pass it for solving
-        // TODO: create some form of error handling for this, eprintln! for err
-        let r = meval::eval_str(&input).unwrap();
-        println!("> {} = {}", input, r);        
+        // with a little check to not crash if input was invalid.
+        match meval::eval_str(&input) {
+            Ok(r) => {
+                println!("> {} = {}", input, r.to_string());
+            }
+            Err(_e) => {
+                eprintln!("ERR: unable to resolve expression")
+            }
+        };
+
     }
 
     process::exit(0);
@@ -93,6 +100,7 @@ fn info_screen() {
 fn same_line_input(text: String) -> String {
     print!("{}", text);
     std::io::stdout().flush().unwrap(); // Why need unwrap to silence warning?
+        // Maybe it should use a real error handling instead?
     let input: String = text_io::read!("{}\n");
     return input;
 }
