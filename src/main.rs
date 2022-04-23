@@ -13,7 +13,6 @@ use std::io::Write; // Needed to force Print buffer in spite of no newline?
 
 // TODO: Create a data file for strings
 //       That will mkake so many things so much cleaner.
-// Make info and help screens not different
 
 // FEATURE WISHLISH:
 // Be able to store results into Memories for later display (or use?)
